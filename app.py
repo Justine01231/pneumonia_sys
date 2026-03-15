@@ -88,7 +88,10 @@ login_manager.login_view = 'login'
 
 # Load TensorFlow Lite model at startup
 print("Loading TensorFlow Lite model...")
-interpreter = tf.lite.Interpreter(model_path="pneumonia_model.tflite")
+interpreter = tf.lite.Interpreter(
+    model_path="pneumonia_model.tflite",
+    num_threads=1  # CRITICAL for Render free tier: prevents thread/OOM crashes (Status 139)
+)
 interpreter.allocate_tensors()
 
 # Get model input/output details
