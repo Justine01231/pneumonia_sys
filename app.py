@@ -834,12 +834,13 @@ if __name__ == '__main__':
     print("🏥 MediScan Pneumonia Detection System")
     print("="*50)
     print(f"Database: {masked_db_uri(app.config['SQLALCHEMY_DATABASE_URI'])}")
-    print(f"Server running at: http://localhost:5000")
-    print(f"Access from network: http://<your-ip>:5000")
+    
+    port = int(os.environ.get("PORT", 5000))
+    print(f"Server starting on port: {port}")
     print("="*50 + "\n")
     
     app.run(
-        host='0.0.0.0',  # Allow network access
-        port=5000,
-        debug=True       # Enable auto-reload during development
+        host='0.0.0.0',
+        port=port,
+        debug=False  # Must be False for production/Render
     )
