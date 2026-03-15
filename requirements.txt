@@ -1,9 +1,18 @@
+# Core
 Flask==3.0.0
-Pillow==10.1.0
+Pillow>=10.1.0
 tensorflow==2.15.0
 flask-sqlalchemy
 flask-login
+
+# Database
 psycopg2-binary
+
+# Processing
 opencv-python-headless
 numpy>=1.24.0
+
+# Deployment
 gunicorn
+setuptools
+pip>=24.0
