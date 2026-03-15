@@ -1,0 +1,9 @@
+Flask==3.0.0
+Pillow==10.1.0
+tensorflow==2.15.0
+flask-sqlalchemy
+flask-login
+psycopg2-binary
+opencv-python-headless
+numpy>=1.24.0
+gunicorn

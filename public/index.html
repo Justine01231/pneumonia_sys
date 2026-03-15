@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediScan - Pneumonia Detection System</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Left Sidebar Navigation -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <img src="Med.png" alt="MediScan Logo" class="sidebar-logo">
+            <h2>MediScan</h2>
+        </div>
+
+        <ul class="sidebar-menu">
+            <li class="menu-item" data-page="auth">
+                <i class="fas fa-user-lock"></i>
+                <span>Authentication</span>
+            </li>
+            <li class="menu-item active" data-page="dashboard">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </li>
+            <li class="menu-item" data-page="upload">
+                <i class="fas fa-upload"></i>
+                <span>Upload</span>
+            </li>
+            <li class="menu-item" data-page="history">
+                <i class="fas fa-history"></i>
+                <span>History</span>
+            </li>
+            <li class="menu-item" data-page="about">
+                <i class="fas fa-info-circle"></i>
+                <span>About</span>
+            </li>
+            <li class="menu-item" data-page="settings">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </li>
+        </ul>
+
+        <div class="sidebar-auth">
+            <div class="user-badge" id="userBadge">Not signed in</div>
+            <button class="btn-secondary btn-logout hidden" id="logoutBtn" type="button">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <!-- Authentication Page -->
+        <div class="page active" id="auth-page">
+            <div class="auth-layout">
+                <div class="page-header">
+                    <h1><i class="fas fa-user-lock"></i> Authentication</h1>
+                    <p>Sign in to access dashboard, upload, and history</p>
+                </div>
+
+                <div class="card auth-card">
+                    <div class="auth-tabs">
+                        <button id="showLoginBtn" class="auth-tab active" type="button">Login</button>
+                        <button id="showSignupBtn" class="auth-tab" type="button">Signup</button>
+                    </div>
+
+                    <form id="loginForm" class="auth-form">
+                        <div class="form-group">
+                            <label for="loginUsername"><i class="fas fa-user"></i> Username</label>
+                            <input id="loginUsername" name="username" type="text" required minlength="3" maxlength="30"
+                                placeholder="Enter your username">
+                        </div>
+                        <div class="form-group">
+                            <label for="loginPassword"><i class="fas fa-lock"></i> Password</label>
+                            <input id="loginPassword" name="password" type="password" required minlength="6"
+                                placeholder="Enter your password">
+                        </div>
+                        <button type="submit" class="btn-primary">Login</button>
+                        <p class="auth-link">Don't have an account? <a href="#" id="toSignupLink">Create one</a></p>
+                    </form>
+
+                    <form id="signupForm" class="auth-form hidden">
+                        <div class="form-group">
+                            <label for="signupUsername"><i class="fas fa-user-plus"></i> Username</label>
+                            <input id="signupUsername" name="username" type="text" required minlength="3" maxlength="30"
+                                placeholder="Choose a username (letters, numbers, _, ., -)">
+                        </div>
+                        <div class="form-group">
+                            <label for="signupPassword"><i class="fas fa-lock"></i> Password</label>
+                            <input id="signupPassword" name="password" type="password" required minlength="6"
+                                placeholder="Create a password (min 6 characters)">
+                        </div>
+                        <div class="form-group">
+                            <label for="signupConfirmPassword"><i class="fas fa-check-circle"></i> Confirm Password</label>
+                            <input id="signupConfirmPassword" name="confirmPassword" type="password" required minlength="6"
+                                placeholder="Re-enter your password">
+                        </div>
+                        <button type="submit" class="btn-primary">Signup</button>
+                        <p class="auth-link">Already registered? <a href="#" id="toLoginLink">Login now</a></p>
+                    </form>
+
+                    <p id="authMessage" class="auth-message hidden"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Page -->
+        <div class="page" id="dashboard-page">
+            <div class="page-header">
+                <h1><i class="fas fa-home"></i> Dashboard</h1>
+                <p>Overview of pneumonia detection system</p>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <i class="fas fa-x-ray"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalScans">0</h3>
+                        <p>Total Scans</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="patientsToday">0</h3>
+                        <p>Patients Today</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="normalCount">0</h3>
+                        <p>Normal Results</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="pneumoniaCount">0</h3>
+                        <p>Pneumonia Results</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Patients Table -->
+            <div class="card">
+                <h2><i class="fas fa-users"></i> Recent Patients</h2>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Patient Name</th>
+                                <th>Age</th>
+                                <th>Gender</th>
+                                <th>Scan Date</th>
+                                <th>Result</th>
+                                <th>Confidence</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentPatientsTable">
+                            <tr>
+                                <td colspan="6" class="no-data">No recent scans</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upload Page -->
+        <div class="page" id="upload-page">
+            <div class="page-header">
+                <h1><i class="fas fa-upload"></i> Upload X-Ray</h1>
+                <p>Analyze chest X-ray for pneumonia detection</p>
+            </div>
+
+            <!-- Step Indicator -->
+            <div class="steps-indicator">
+                <div class="step active" id="step1-indicator">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Patient Info</div>
+                </div>
+                <div class="step-line"></div>
+                <div class="step" id="step2-indicator">
+                    <div class="step-number">2</div>
+                    <div class="step-label">X-Ray Upload</div>
+                </div>
+            </div>
+
+            <!-- Step 1: Patient Information -->
+            <div class="upload-step active" id="step1">
+                <div class="card">
+                    <h2><i class="fas fa-user"></i> Patient Information</h2>
+                    <p class="instruction">Please fill in patient details before uploading X-ray</p>
+
+                    <form id="patientForm" class="patient-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="patientName">
+                                    <i class="fas fa-user"></i> Patient Name <span class="required">*</span>
+                                </label>
+                                <input type="text" id="patientName" name="patientName" required
+                                    placeholder="Enter patient name">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="patientAge">
+                                    <i class="fas fa-calendar"></i> Age <span class="required">*</span>
+                                </label>
+                                <input type="number" id="patientAge" name="patientAge" required min="1" max="120"
+                                    placeholder="Enter age">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="patientGender">
+                                    <i class="fas fa-venus-mars"></i> Gender <span class="required">*</span>
+                                </label>
+                                <select id="patientGender" name="patientGender" required>
+                                    <option value="">Select gender</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn-primary" id="nextToUploadBtn" disabled>
+                            Next: Upload X-Ray <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Step 2: X-Ray Upload & Analysis -->
+            <div class="upload-step" id="step2">
+                <div class="card">
+                    <h2><i class="fas fa-x-ray"></i> X-Ray Upload & Analysis</h2>
+                    <p class="instruction">Upload chest X-ray image for analysis</p>
+
+                    <div class="patient-summary" id="patientSummary">
+                        <!-- Will be populated dynamically -->
+                    </div>
+
+                    <!-- Important Warning -->
+                    <div class="disclaimer"
+                        style="margin: 20px 0; background: #fff3cd; border-left: 4px solid #ffc107;">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <strong>Important:</strong> This system is designed ONLY for chest X-ray images.
+                        Uploading non-medical images (photos, landscapes, etc.) will produce invalid results.
+                        The AI model can only analyze medical X-rays and cannot detect if an image is not an X-ray.
+                    </div>
+
+                    <div class="upload-area" id="uploadArea">
+                        <input type="file" id="imageInput" accept="image/jpeg,image/jpg,image/png" hidden>
+                        <label for="imageInput" class="upload-label">
+                            <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                            <p>Click to upload or drag and drop</p>
+                            <small>Supported: JPG, JPEG, PNG (Max 10MB)</small>
+                        </label>
+                    </div>
+
+                    <!-- Image Preview -->
+                    <div id="previewSection" class="preview-section hidden">
+                        <img id="imagePreview" class="image-preview" alt="X-ray preview">
+                        <button class="btn-secondary" onclick="clearImage()">
+                            <i class="fas fa-times"></i> Clear Image
+                        </button>
+                    </div>
+
+                    <!-- Analyze Button -->
+                    <button id="analyzeBtn" class="btn-primary" onclick="analyzeImage()" disabled>
+                        <i class="fas fa-search"></i> Analyze X-Ray
+                    </button>
+
+                    <!-- Loading -->
+                    <div id="loadingSection" class="loading-section hidden">
+                        <div class="spinner"></div>
+                        <p>Analyzing X-ray image...</p>
+                    </div>
+
+                    <!-- Results -->
+                    <div id="resultSection" class="result-section hidden">
+                        <h2><i class="fas fa-chart-bar"></i> Analysis Results</h2>
+
+                        <div class="result-content">
+                            <div class="diagnosis" id="diagnosisBox">
+                                <div class="diagnosis-label">Diagnosis:</div>
+                                <div class="diagnosis-value" id="diagnosisValue">-</div>
+                            </div>
+
+                            <div class="confidence-section">
+                                <div class="confidence-label">Confidence Level</div>
+                                <div class="confidence-bar">
+                                    <div class="confidence-fill" id="confidenceFill"></div>
+                                </div>
+                                <div class="confidence-text" id="confidenceText">0%</div>
+                            </div>
+
+                            <!-- Grad-CAM Heatmap -->
+                            <div class="gradcam-section" id="gradcamSection">
+                                <h3><i class="fas fa-fire"></i> Grad-CAM Visualization</h3>
+                                <p class="gradcam-description">
+                                    Heatmap showing areas that influenced the AI's decision
+                                </p>
+                                <img id="gradcamImage" class="gradcam-image" alt="Grad-CAM heatmap">
+                            </div>
+
+                            <div class="lobe-section" id="lobeSection">
+                                <h3><i class="fas fa-lungs"></i> Lobe Probabilities</h3>
+                                <p class="gradcam-description">
+                                    Multi-label predictions from the lobe model (not a diagnosis)
+                                </p>
+                                <div class="lobe-table" id="lobeTable"></div>
+
+                                <div class="lobe-gradcam">
+                                    <label for="lobeSelect">Lobe Grad-CAM:</label>
+                                    <select id="lobeSelect"></select>
+                                    <img id="lobeGradcamImage" class="gradcam-image" alt="Lobe Grad-CAM heatmap">
+                                    <p id="lobeUnavailable" class="lobe-unavailable hidden"></p>
+                                </div>
+                            </div>
+
+                            <div class="model-info">
+                                <p><strong>Model:</strong> <span id="modelName">-</span></p>
+                                <p><strong>Accuracy:</strong> <span id="modelAccuracy">-</span></p>
+                            </div>
+
+                            <div class="disclaimer">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <strong>Medical Disclaimer:</strong> This is an AI screening tool.
+                                Results should be reviewed by a qualified medical professional.
+                                Do not use as the sole basis for diagnosis.
+                            </div>
+                        </div>
+
+                        <button class="btn-secondary" onclick="analyzeAnother()">
+                            <i class="fas fa-redo"></i> Analyze Another Image
+                        </button>
+                    </div>
+
+                    <button class="btn-secondary" id="backToPatientBtn" onclick="backToPatientInfo()">
+                        <i class="fas fa-arrow-left"></i> Back to Patient Info
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- History Page -->
+        <div class="page" id="history-page">
+            <div class="page-header">
+                <h1><i class="fas fa-history"></i> Scan History</h1>
+                <p>View all patient scan records</p>
+            </div>
+
+            <div class="card">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="historySearch" placeholder="Search by patient name...">
+                </div>
+
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Patient Name</th>
+                                <th>Age</th>
+                                <th>Gender</th>
+                                <th>Scan Date</th>
+                                <th>Result</th>
+                                <th>Confidence</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTable">
+                            <tr>
+                                <td colspan="6" class="no-data">No scan history</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- About Page -->
+        <div class="page" id="about-page">
+            <div class="page-header">
+                <h1><i class="fas fa-info-circle"></i> About</h1>
+                <p>Learn about the pneumonia detection system</p>
+            </div>
+
+            <div class="about-grid">
+                <div class="info-card">
+                    <div class="info-icon"><i class="fas fa-brain"></i></div>
+                    <h3>Model Used</h3>
+                    <p><strong>Name:</strong> MediScan Pneumonia Detection v2.0</p>
+                    <p><strong>Architecture:</strong> ResNet-50 (Residual Neural Network)</p>
+                    <p><strong>Type:</strong> Deep Learning CNN (Convolutional Neural Network)</p>
+                    <p><strong>Framework:</strong> TensorFlow Lite</p>
+                    <p><strong>Training:</strong> Trained on thousands of chest X-ray images</p>
+                    <p style="margin-top: 10px; font-size: 0.9em; color: #666;">
+                        The ResNet-50 model uses residual connections to analyze radiographic patterns
+                        and features that may indicate pneumonia infection in chest X-rays.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon"><i class="fas fa-cogs"></i></div>
+                    <h3>How It Works</h3>
+                    <ol class="workflow-list">
+                        <li>Enter patient information</li>
+                        <li>Upload chest X-ray image</li>
+                        <li>AI analyzes image patterns</li>
+                        <li>Receive diagnosis with confidence score</li>
+                        <li>Review Grad-CAM heatmap visualization</li>
+                    </ol>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon"><i class="fas fa-fire"></i></div>
+                    <h3>Grad-CAM Visualization</h3>
+                    <p>Grad-CAM (Gradient-weighted Class Activation Mapping) highlights the regions of the X-ray that
+                        most influenced the AI's decision.</p>
+                    <p><strong>Red/Yellow areas:</strong> High importance</p>
+                    <p><strong>Blue/Green areas:</strong> Lower importance</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon"><i class="fas fa-shield-alt"></i></div>
+                    <h3>Privacy & Security</h3>
+                    <p>Patient data is stored securely in a local database. All information is encrypted and protected.
+                    </p>
+                    <p>Images are processed locally and not sent to external servers.</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon"><i class="fas fa-exclamation-circle"></i></div>
+                    <h3>Important Notice</h3>
+                    <p class="warning-text">
+                        This AI system is designed to assist medical professionals, not replace them.
+                        All results must be reviewed and verified by qualified healthcare providers.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon"><i class="fas fa-chart-line"></i></div>
+                    <h3>Model Performance</h3>
+                    <div class="metrics-grid">
+                        <div class="metric">
+                            <div class="metric-value">84.78%</div>
+                            <div class="metric-label">Accuracy</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">91.3%</div>
+                            <div class="metric-label">Sensitivity</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">72.65%</div>
+                            <div class="metric-label">Specificity</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">87.2%</div>
+                            <div class="metric-label">F1 Score</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Page -->
+        <div class="page" id="settings-page">
+            <div class="page-header">
+                <h1><i class="fas fa-cog"></i> Settings</h1>
+                <p>Customize your experience</p>
+            </div>
+
+            <div class="card">
+                <h2><i class="fas fa-palette"></i> Appearance</h2>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <h3>Theme</h3>
+                        <p>Choose your preferred color scheme</p>
+                    </div>
+                    <div class="theme-toggle">
+                        <button class="theme-btn active" data-theme="light">
+                            <i class="fas fa-sun"></i> Light
+                        </button>
+                        <button class="theme-btn" data-theme="dark">
+                            <i class="fas fa-moon"></i> Dark
+                        </button>
+                    </div>
+                </div>
+
+                <div class="theme-preview" id="themePreview">
+                    <p>Theme changes are saved automatically</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

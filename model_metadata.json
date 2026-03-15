@@ -1,0 +1,41 @@
+{
+  "model_name": "MediScan Pneumonia Detection",
+  "architecture": "ResNet-50",
+  "version": "2.0",
+  "created_date": "2026-01-29 00:23:44",
+  "model_file": "pneumonia_model.tflite",
+  "input_shape": [
+    1,
+    224,
+    224,
+    3
+  ],
+  "output_shape": [
+    1,
+    1
+  ],
+  "input_type": "float32",
+  "output_type": "float32",
+  "preprocessing": {
+    "resize": [
+      224,
+      224
+    ],
+    "normalization": "divide by 255.0",
+    "color_mode": "RGB"
+  },
+  "classes": {
+    "0": "NORMAL",
+    "1": "PNEUMONIA"
+  },
+  "threshold": 0.5,
+  "performance": {
+    "accuracy": "84.78%",
+    "auc_roc": 0.913,
+    "specificity": "72.65%"
+  },
+  "usage": {
+    "description": "Load image, resize to 224x224, normalize to 0-1, run inference",
+    "output_interpretation": "Value > 0.5 = PNEUMONIA, Value <= 0.5 = NORMAL"
+  }
+}

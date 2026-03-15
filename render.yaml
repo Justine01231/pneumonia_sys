@@ -1,0 +1,24 @@
+databases:
+  - name: pneumonia-db
+    databaseName: pneumonia_sys
+    user: pneumonia_user
+    plan: free
+
+services:
+  - type: web
+    name: pneumonia-sys
+    runtime: python
+    plan: free
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn app:app"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: pneumonia-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEFAULT_ADMIN_USERNAME
+        value: admin
+      - key: DEFAULT_ADMIN_PASSWORD
+        generateValue: true
